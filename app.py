@@ -15,7 +15,7 @@ app.secret_key = 'super_secret_university_key_change_later'
 # ==========================================
 # IMPORTANT: PASTE YOUR GEMINI API KEY HERE
 # ==========================================
-gemini_client = genai.Client(api_key="my api key")
+gemini_client = genai.Client(api_key="my api key ")
 
 print("Waking up the AI Brains...")
 try:
