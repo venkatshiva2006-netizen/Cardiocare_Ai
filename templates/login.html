@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - CardioCare AI</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+        
+        body, html {
+            margin: 0; padding: 0; font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; color: #0f172a; height: 100%; overflow-x: hidden;
+        }
+
+        /* --- THE AURORA BACKGROUND --- */
+        .background-glow {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+            background: #f8fafc; overflow: hidden;
+        }
+        .glow-1 {
+            position: absolute; top: -10%; left: -10%; width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(14,165,233,0.15) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%; filter: blur(60px); animation: float 10s ease-in-out infinite;
+        }
+        .glow-2 {
+            position: absolute; bottom: -10%; right: -5%; width: 60vw; height: 60vw;
+            background: radial-gradient(circle, rgba(16,185,129,0.1) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%; filter: blur(60px); animation: float 12s ease-in-out infinite reverse;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px) translateX(0px); }
+            50% { transform: translateY(30px) translateX(20px); }
+            100% { transform: translateY(0px) translateX(0px); }
+        }
+
+        /* --- THE SOLID BLUE TOP BLOCK --- */
+        .navbar {
+            display: flex; justify-content: center; align-items: center;
+            padding: 30px 50px; background-color: #0f4c81; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: fixed; width: 100%; top: 0; box-sizing: border-box; z-index: 100;
+        }
+        .navbar .brand {
+            font-size: 3.5em; font-weight: 800; color: #ffffff; letter-spacing: -1px;
+            display: flex; align-items: center; gap: 15px;
+        }
+        .navbar .brand span { color: #38bdf8; }
+
+        /* --- THE LOGIN CARD --- */
+        .auth-wrapper {
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; padding-top: 140px; box-sizing: border-box;
+        }
+        .auth-card {
+            background: white; padding: 40px; border-radius: 12px; width: 400px; text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;
+        }
+        h2 { color: #0f172a; margin-top: 0; font-size: 1.8em; font-weight: 800; letter-spacing: -0.5px;}
+        .subtitle { color: #64748b; margin-bottom: 25px; font-size: 0.95em; line-height: 1.5;}
+
+        /* Role Selection Buttons */
+        .role-selection { display: flex; gap: 15px; margin-top: 20px; }
+        .role-btn {
+            flex: 1; padding: 20px 10px; background: #f8fafc; border: 1px solid #cbd5e1;
+            border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: 600; color: #334155;
+            transition: all 0.2s ease; font-family: 'Inter', sans-serif;
+        }
+        .role-btn:hover { border-color: #0ea5e9; background: #f0f9ff; color: #0284c7; transform: translateY(-2px); }
+        .role-btn span { display: block; font-size: 1.8em; margin-bottom: 8px; }
+
+        /* The Form */
+        #loginForm { display: none; text-align: left; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.9em; color: #475569;}
+        input {
+            width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px;
+            box-sizing: border-box; font-size: 1em; font-family: 'Inter', sans-serif; transition: 0.2s;
+        }
+        input:focus { outline: none; border-color: #0ea5e9; box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15); }
+        
+        .submit-btn {
+            width: 100%; padding: 14px; background-color: #0f4c81; color: white; border: none;
+            border-radius: 6px; font-size: 1.05em; font-weight: 600; cursor: pointer; margin-top: 10px; transition: 0.2s;
+        }
+        .submit-btn:hover { background-color: #0a365c; box-shadow: 0 4px 12px rgba(15, 76, 129, 0.2); }
+        
+        .back-link { display: inline-block; margin-top: 20px; color: #64748b; text-decoration: none; font-size: 0.9em; font-weight: 600; cursor: pointer; transition: 0.2s;}
+        .back-link:hover { color: #0f4c81; }
+        .error-msg { background: #fef2f2; color: #b91c1c; padding: 12px; border-radius: 6px; margin-bottom: 20px; font-size: 0.9em; border: 1px solid #fecaca; text-align: left;}
+
+        /* --- VISIBILITY TOGGLE CSS ADDED HERE --- */
+        .pwd-wrapper { position: relative; width: 100%; }
+        .pwd-wrapper input { padding-right: 40px; } /* Room for the icon */
+        .toggle-icon { 
+            position: absolute; right: 12px; top: 50%; transform: translateY(-50%); 
+            cursor: pointer; color: #94a3b8; display: flex; align-items: center; transition: 0.2s;
+        }
+        .toggle-icon:hover { color: #0ea5e9; }
+    </style>
+</head>
+<body>
+
+    <div class="background-glow"><div class="glow-1"></div><div class="glow-2"></div></div>
+
+    <header class="navbar">
+        <div class="brand">
+            <svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            CardioCare <span>AI</span>
+        </div>
+    </header>
+
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <h2 id="mainHeading">Secure Login</h2>
+            <p class="subtitle" id="subText">Please select your authorization level to access the portal.</p>
+            
+            {% if error %} <div class="error-msg">{{ error }}</div> {% endif %}
+
+            <div id="roleSelector">
+                <div class="role-selection">
+                    <button class="role-btn" onclick="showForm('doctor')"><span>🩺</span> Clinical Staff</button>
+                    <button class="role-btn" onclick="showForm('patient')"><span>👤</span> Patient</button>
+                </div>
+                <a href="/" class="back-link">← Return Home</a>
+            </div>
+
+            <form id="loginForm" action="/login" method="POST" autocomplete="off">
+                <input type="hidden" id="selectedRole" name="role" value=""> 
+                
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" required placeholder="name@domain.com" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    
+                    <div class="pwd-wrapper">
+                        <input type="password" name="password" id="loginPwd" required placeholder="Enter your password" autocomplete="new-password">
+                        <span class="toggle-icon" onclick="toggleVisibility('loginPwd', this)">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        </span>
+                    </div>
+
+                </div>
+                <button type="submit" class="submit-btn">Authenticate</button>
+                <div style="text-align: center;">
+                    <a onclick="hideForm()" class="back-link">← Change Access Role</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<script>
+    function showForm(role) {
+        document.getElementById('roleSelector').style.display = 'none';
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('selectedRole').value = role;
+        
+        if(role === 'doctor') {
+            document.getElementById('mainHeading').innerText = "Clinical Portal";
+            document.getElementById('subText').innerText = "Enter your verified medical staff credentials.";
+        } else {
+            document.getElementById('mainHeading').innerText = "Patient Portal";
+            document.getElementById('subText').innerText = "Enter your credentials to view your health records.";
+        }
+    }
+    function hideForm() {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('roleSelector').style.display = 'block';
+        document.getElementById('mainHeading').innerText = "Secure Login";
+        document.getElementById('subText').innerText = "Please select your authorization level to access the portal.";
+    }
+
+    // JAVASCRIPT FOR EYE ICON ADDED HERE
+    function toggleVisibility(inputId, iconSpan) {
+        const input = document.getElementById(inputId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            iconSpan.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>';
+        } else {
+            input.type = 'password';
+            iconSpan.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+        }
+    }
+</script>
+</body>
+</html>

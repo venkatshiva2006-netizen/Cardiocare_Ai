@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Super Admin Portal - CardioCare AI</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+        body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background-color: #0f172a; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; }
+        .login-box { background: #1e293b; padding: 40px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center; border-top: 5px solid #ef4444; }
+        h2 { margin-bottom: 30px; letter-spacing: -1px; }
+        .error { color: #fca5a5; background: rgba(239,68,68,0.1); padding: 10px; border-radius: 6px; margin-bottom: 20px; font-size: 0.9em; }
+        
+        input { width: 100%; padding: 15px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; font-family: 'Inter'; outline: none; }
+        input:focus { border-color: #ef4444; }
+        
+        button { width: 100%; padding: 15px; background: #ef4444; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 1.05em; }
+        button:hover { background: #dc2626; }
+        .back-link { display: block; margin-top: 20px; color: #94a3b8; text-decoration: none; font-size: 0.9em; }
+        .back-link:hover { color: white; }
+
+        /* --- VISIBILITY TOGGLE CSS --- */
+        .pwd-wrapper { position: relative; width: 100%; margin-bottom: 20px; }
+        .pwd-wrapper input { margin-bottom: 0; padding-right: 50px; }
+        .toggle-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #94a3b8; transition: 0.2s; display: flex; align-items: center; }
+        .toggle-icon:hover { color: white; }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h2>System Administration</h2>
+        {% if error %} <div class="error">{{ error }}</div> {% endif %}
+        
+        <form action="/admin_login" method="POST" autocomplete="off">
+            <input type="email" name="email" placeholder="Admin Email" required autocomplete="off">
+            
+            <div class="pwd-wrapper">
+                <input type="password" name="password" id="adminPwd" placeholder="Secure Password" required autocomplete="new-password">
+                <span class="toggle-icon" onclick="toggleVisibility('adminPwd', this)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </span>
+            </div>
+
+            <button type="submit">Authorize Access</button>
+        </form>
+        <a href="/" class="back-link">← Return to Public Portal</a>
+    </div>
+
+    <script>
+        function toggleVisibility(inputId, iconSpan) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                iconSpan.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>';
+            } else {
+                input.type = 'password';
+                iconSpan.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clinical AI Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 500px; margin: auto; }
+        .form-group { margin-bottom: 10px; display: flex; justify-content: space-between; }
+        input { padding: 5px; width: 150px; }
+        button { margin-top: 15px; padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer; width: 100%; font-size: 16px;}
+        #result { margin-top: 20px; font-weight: bold; font-size: 1.2em; text-align: center; }
+        
+        /* NEW: Styling for the feedback box */
+        #feedback-area { margin-top: 20px; padding: 15px; background-color: #f8f9fa; border: 1px solid #ddd; text-align: center; display: none; }
+        .feedback-btn { margin-top: 5px; background-color: #6c757d; width: 48%; display: inline-block; }
+    </style>
+</head>
+<body>
+    <h2>Heart Disease AI Predictor</h2>
+    
+    <form id="vitalsForm">
+        <div class="form-group"><label>Age:</label><input type="number" id="age" value="45" required></div>
+        <div class="form-group"><label>Sex (1=M, 0=F):</label><input type="number" id="sex" value="1" required></div>
+        <div class="form-group"><label>Chest Pain (0-3):</label><input type="number" id="cp" value="0" required></div>
+        <div class="form-group"><label>Resting BP:</label><input type="number" id="trestbps" value="120" required></div>
+        <div class="form-group"><label>Cholesterol:</label><input type="number" id="chol" value="200" required></div>
+        <div class="form-group"><label>Fasting Blood Sugar > 120 (1/0):</label><input type="number" id="fbs" value="0" required></div>
+        <div class="form-group"><label>Resting ECG (0-2):</label><input type="number" id="restecg" value="1" required></div>
+        <div class="form-group"><label>Max Heart Rate:</label><input type="number" id="thalach" value="150" required></div>
+        <div class="form-group"><label>Exercise Angina (1/0):</label><input type="number" id="exang" value="0" required></div>
+        <div class="form-group"><label>Oldpeak:</label><input type="number" step="0.1" id="oldpeak" value="1.0" required></div>
+        <div class="form-group"><label>Slope (0-2):</label><input type="number" id="slope" value="1" required></div>
+        <div class="form-group"><label>Major Vessels (0-4):</label><input type="number" id="ca" value="0" required></div>
+        <div class="form-group"><label>Thal (0-3):</label><input type="number" id="thal" value="2" required></div>
+        <button type="submit">Run AI Diagnosis</button>
+    </form>
+    
+    <div id="result"></div>
+
+    <div id="feedback-area">
+        <p>Did the AI get it wrong? Correct it below:</p>
+        <button class="feedback-btn" onclick="sendFeedback(1)">Actually At Risk</button>
+        <button class="feedback-btn" onclick="sendFeedback(0)">Actually Healthy</button>
+    </div>
+
+    <script>
+        let currentPatientData = {}; // Stores the data temporarily for the feedback loop
+
+        document.getElementById('vitalsForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            currentPatientData = {
+                age: parseFloat(document.getElementById('age').value),
+                sex: parseFloat(document.getElementById('sex').value),
+                cp: parseFloat(document.getElementById('cp').value),
+                trestbps: parseFloat(document.getElementById('trestbps').value),
+                chol: parseFloat(document.getElementById('chol').value),
+                fbs: parseFloat(document.getElementById('fbs').value),
+                restecg: parseFloat(document.getElementById('restecg').value),
+                thalach: parseFloat(document.getElementById('thalach').value),
+                exang: parseFloat(document.getElementById('exang').value),
+                oldpeak: parseFloat(document.getElementById('oldpeak').value),
+                slope: parseFloat(document.getElementById('slope').value),
+                ca: parseFloat(document.getElementById('ca').value),
+                thal: parseFloat(document.getElementById('thal').value)
+            };
+
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(currentPatientData)
+            });
+
+            const result = await response.json();
+            const resultDiv = document.getElementById('result');
+            
+            if(result.risk_prediction === 1) {
+                resultDiv.style.color = 'red';
+                resultDiv.innerText = '⚠️ AI Diagnosis: At Risk for Heart Disease';
+            } else {
+                resultDiv.style.color = 'green';
+                resultDiv.innerText = '✅ AI Diagnosis: Healthy';
+            }
+
+            // Show the feedback box so the user can correct the AI
+            document.getElementById('feedback-area').style.display = 'block';
+        });
+
+        // NEW: Function to send the correction to the AI
+        async function sendFeedback(correctValue) {
+            // Attach the correct diagnosis to the patient data
+            const feedbackData = { ...currentPatientData, correct_diagnosis: correctValue };
+            
+            const response = await fetch('/feedback', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(feedbackData)
+            });
+
+            const result = await response.json();
+            alert(result.message); // Show a popup confirming the AI learned
+            document.getElementById('feedback-area').style.display = 'none'; // Hide the box again
+        }
+    </script>
+</body>
+</html>

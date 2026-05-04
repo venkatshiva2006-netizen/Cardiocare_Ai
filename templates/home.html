@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CardioCare AI - Clinical Intelligence</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- THE MODERN AURORA BACKGROUND --- */
+        .background-glow {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            background: #f8fafc;
+            overflow: hidden;
+        }
+        .glow-1 {
+            position: absolute; top: -10%; left: -10%; width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(14,165,233,0.15) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%; filter: blur(60px); animation: float 10s ease-in-out infinite;
+        }
+        .glow-2 {
+            position: absolute; bottom: -10%; right: -5%; width: 60vw; height: 60vw;
+            background: radial-gradient(circle, rgba(16,185,129,0.1) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%; filter: blur(60px); animation: float 12s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) translateX(0px); }
+            50% { transform: translateY(30px) translateX(20px); }
+            100% { transform: translateY(0px) translateX(0px); }
+        }
+
+        /* --- THE SOLID BLUE TOP BLOCK --- */
+        .navbar {
+            display: flex;
+            justify-content: center; /* Centers the massive text */
+            align-items: center;
+            padding: 30px 50px;
+            background-color: #0f4c81; /* Solid deep blue block */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            box-sizing: border-box;
+            z-index: 100;
+        }
+
+        .navbar .brand {
+            font-size: 3.5em; /* Massive font size */
+            font-weight: 800;
+            color: #ffffff; /* White text to contrast the blue */
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .navbar .brand span { color: #38bdf8; } /* Bright cyan accent for 'AI' */
+
+        /* --- NEW: ADMIN BUTTON STYLING --- */
+        .admin-btn {
+            position: absolute; /* Keeps it inside the navbar but pinned to the right */
+            right: 50px;
+            top: 50%;
+            transform: translateY(-50%); /* Centers it vertically */
+            padding: 12px 24px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 2px solid #ef4444; /* Admin Red accent */
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .admin-btn:hover {
+            background-color: #ef4444;
+            color: #ffffff;
+            box-shadow: 0 6px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        /* --- THE MAIN HERO SECTION --- */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 100vh;
+            padding: 0 20px;
+            margin-top: 60px; /* Offset so the big header doesn't cover the text */
+        }
+
+        .hero h1 {
+            font-size: 4.5em;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+            color: #0f172a;
+            max-width: 800px;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, #0ea5e9, #2563eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25em;
+            color: #64748b;
+            max-width: 600px;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        /* --- THE CTA BUTTONS --- */
+        .btn-group {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: #0f4c81;
+            color: white;
+            box-shadow: 0 4px 14px 0 rgba(15, 76, 129, 0.39);
+        }
+
+        .btn-primary:hover {
+            background-color: #0a365c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(15, 76, 129, 0.23);
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-secondary:hover {
+            border-color: #cbd5e1;
+            background-color: #f8fafc;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-glow">
+        <div class="glow-1"></div>
+        <div class="glow-2"></div>
+    </div>
+
+    <header class="navbar">
+        <div class="brand">
+            <svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            CardioCare <span>AI</span>
+        </div>
+        
+        <a href="/admin_login" class="admin-btn">🛡️ Admin Portal</a>
+    </header>
+    
+    <main class="hero">
+        <h1>Predictive healthcare, <span>powered by AI.</span></h1>
+        <p>A secure, machine-learning platform designed for clinical staff and patients to track, predict, and manage cardiac health.</p>
+        
+        <div class="btn-group">
+            <a href="/login" class="btn btn-primary">Login to the account</a>
+            <a href="/register" class="btn btn-secondary">Register new profile</a>
+        </div>
+    </main>
+
+</body>
+</html>
